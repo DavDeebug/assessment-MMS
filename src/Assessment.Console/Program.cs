@@ -22,13 +22,20 @@ void Work()
         path = ReadLine();
     } while (string.IsNullOrEmpty(path) || path.Length < 3);
 
-    var reader = new Reader(path);
-    var users = reader.GetUsers();
+    try
+    {
+        var reader = new Reader(path);
+        var users = reader.GetUsers();
 
-    var retriever = new Retriever(users);
-    var completeUsers = retriever.RetrieveUsers() ?? Enumerable.Empty<User>();
-    
-    var writer = new Writer(completeUsers, path);
-    writer.Write();
-    WriteLine("Done!");    
+        var retriever = new Retriever(users);
+        var completeUsers = retriever.RetrieveUsers() ?? Enumerable.Empty<User>();
+
+        var writer = new Writer(completeUsers, path);
+        writer.Write();
+        WriteLine("Done!");
+    }
+    catch (Exception e)
+    {
+        WriteLine("An error occurred: {0}", e.Message);
+    }
 }

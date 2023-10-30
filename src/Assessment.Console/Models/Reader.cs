@@ -8,7 +8,7 @@ public class Reader
 
     public Reader(string path)
     {
-        _path = path;
+        _path = path ?? string.Empty;
     }
 
     public IEnumerable<Csv> GetUsers()
@@ -19,11 +19,9 @@ public class Reader
             .Select(line =>
             {
                 var split = line.Split(separator);
-                return new Csv
-                {
-                    GivenName = split[0].Trim(),
-                    FamilyName = split[1].Trim()
-                };
+                var givenName = split[0].Trim();
+                var familyName = split[1].Trim();
+                return new Csv(givenName, familyName);                            
             });
 
         return users;
