@@ -1,19 +1,18 @@
-﻿namespace Assessment.Console.Models;
+﻿using Assessment.Console.Abstract;
 
-public class Reader
+namespace Assessment.Console.Models;
+
+public class Reader : IReader
 {
     const string separator = ";";
     const string extension = ".txt";    
     private readonly string _path;
 
-    public Reader(string path)
-    {
-        _path = path ?? string.Empty;
-    }
+    public Reader(string path) => _path = path;
 
     public IEnumerable<Csv> GetUsers()
     {
-        var lines = File.ReadAllLines(Path.Combine(_path!, $"input{extension}"));
+        var lines = File.ReadAllLines(Path.Combine(_path, $"input{extension}"));
         var users = lines
             .Where(line => !string.IsNullOrEmpty(line))
             .Select(line =>

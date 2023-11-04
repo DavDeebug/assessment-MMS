@@ -1,19 +1,18 @@
-﻿using Assessment.Shared;
+﻿using Assessment.Console.Abstract;
+using Assessment.Shared;
 using System.Text.Json;
 using System.Web;
 using static System.Console;
 
 namespace Assessment.Console.Models;
 
-public class Retriever
+public class Retriever : IRetriever
 {
     const string origin = "http://localhost:5000/";
     readonly IEnumerable<Csv> _users;
 
-    public Retriever(IEnumerable<Csv> users)
-    {
-        _users = users ?? Enumerable.Empty<Csv>();
-    }
+    public Retriever(IEnumerable<Csv>? users) => _users = users ?? Enumerable.Empty<Csv>();
+    
 
     public IEnumerable<User> RetrieveUsers()
     {
@@ -35,7 +34,7 @@ public class Retriever
 
             if (!response.IsSuccessStatusCode)
             {
-                WriteLine("An error occured: {0}", response.ReasonPhrase);
+                WriteLine($"An error occured: {response.ReasonPhrase}");
                 continue;
             }
 

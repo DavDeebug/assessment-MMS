@@ -1,22 +1,24 @@
-﻿using Assessment.Shared;
+﻿using Assessment.Console.Abstract;
+using Assessment.Shared;
 using static System.Console;
 
 namespace Assessment.Console.Models;
 
-public class Writer
+public class Writer : IWriter
 {    
     const string extension = ".txt";
     private readonly string _path;
     private readonly IEnumerable<User> _completeUsers;
 
-    public Writer(IEnumerable<User> users, string path)
+    public Writer(IEnumerable<User>? users, string path)
     {
         _path = path;
         _completeUsers = users ?? Enumerable.Empty<User>();
     }
+
     public void Write()
     {
-        if (_completeUsers.Count() == 0)
+        if (!_completeUsers.Any())
         {
             WriteLine("No users found!");
             return;
