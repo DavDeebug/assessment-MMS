@@ -7,6 +7,7 @@ using static System.Console;
 using var host = Host.CreateDefaultBuilder()
     .ConfigureServices(services =>
     {
+        services.AddHttpClients();
         services.AddDomainServices();
         services.AddTransient<Worker>();
     })

@@ -1,4 +1,5 @@
 ﻿using Assessment.Console.Abstract;
+using Assessment.Console.Clients;
 using Assessment.Shared;
 using System.Text.Json;
 using System.Web;
@@ -7,11 +8,15 @@ using static System.Console;
 namespace Assessment.Console.Models;
 
 public class Retriever : IRetriever
-{
-    const string origin = "http://localhost:5000/";
+{    
     readonly IEnumerable<Csv> _users;
+    readonly AssessmentClient _client;
 
-    public Retriever(IEnumerable<Csv>? users) => _users = users ?? Enumerable.Empty<Csv>();
+    public Retriever(IEnumerable<Csv>? users, AssessmentClient client) 
+    {
+        _users = users ?? Enumerable.Empty<Csv>();
+        _client = client;
+    }
     
 
     public IEnumerable<User> RetrieveUsers()
@@ -22,28 +27,17 @@ public class Retriever : IRetriever
             var builder = HttpUtility.ParseQueryString(string.Empty);
 
             builder.Add("given-name", user.GivenName);
-            builder.Add("family-name", user.FamilyName);
-
-            var client = new HttpClient
-            {
-                BaseAddress = new(origin)
-            };
+            builder.Add("family-name", user.FamilyName);            
 
             var request = new HttpRequestMessage(HttpMethod.Get, $"users?{builder}");
-            var response = client.Send(request);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                WriteLine($"An error occured: {response.ReasonPhrase}");
-                continue;
-            }
+            var response = _client.Get(request);
 
             using var stream = response.Content.ReadAsStream();
             var completeUser = JsonSerializer.Deserialize<User>(stream);
 
             if (completeUser is null) continue;
 
-            completeUsers.Add(completeUser);            
+            completeUsers.Add(completeUser);
         }
 
         return completeUsers;

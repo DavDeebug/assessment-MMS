@@ -1,4 +1,5 @@
-﻿using Assessment.Console.Models;
+﻿using Assessment.Console.Clients;
+using Assessment.Console.Models;
 using Assessment.Shared;
 using static System.Console;
 
@@ -7,6 +8,9 @@ namespace Assessment.Console
     public class Worker
     {
         string? path;
+        readonly AssessmentClient _client;
+
+        public Worker(AssessmentClient client) => _client = client;
 
         public void Work()
         {
@@ -22,7 +26,7 @@ namespace Assessment.Console
                 var reader = new Reader(path);
                 var users = reader.GetUsers();
 
-                var retriever = new Retriever(users);
+                var retriever = new Retriever(users, _client);
                 var completeUsers = retriever.RetrieveUsers() ?? Enumerable.Empty<User>();
 
                 var writer = new Writer(completeUsers, path);
