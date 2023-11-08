@@ -28,7 +28,7 @@ while (true)
             path = ReadLine();
         } while (string.IsNullOrEmpty(path) || path.Length < 3);
         
-        app.Work(path);
+        await app.Work(path);
     }
     catch (Exception e)
     {

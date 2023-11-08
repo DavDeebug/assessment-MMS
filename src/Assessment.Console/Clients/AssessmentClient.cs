@@ -4,13 +4,13 @@ namespace Assessment.Console.Clients
 {
     public class AssessmentClient
     {
-        private readonly HttpClient _client;
+        readonly HttpClient _client;
 
         public AssessmentClient(HttpClient client) => _client = client;
 
-        public HttpResponseMessage Get(HttpRequestMessage request)
+        public async Task <HttpResponseMessage> GetAsync(HttpRequestMessage request)
         {
-            var response = _client.Send(request);
+            var response = await _client.SendAsync(request);
 
             if (!response.IsSuccessStatusCode)            
                 WriteLine($"An error occured: {response.ReasonPhrase}");

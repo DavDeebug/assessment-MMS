@@ -4,15 +4,15 @@ using Microsoft.Extensions.Options;
 
 namespace Assessment.Console.Models;
 
-public class Reader : IReader
+public class Reader : IReaderAsync
 {
-    private readonly ReaderOptions _options;
+    readonly ReaderOptions _options;
 
     public Reader(IOptions<ReaderOptions> options) => _options = options.Value;
 
-    public IEnumerable<Csv> GetUsers(string filePath)
+    public async Task<IEnumerable<Csv>> ReadUsersAsync(string filePath)
     {
-        var lines = File.ReadAllLines(Path.Combine(filePath,
+        var lines =  await File.ReadAllLinesAsync(Path.Combine(filePath,
             string.Format(_options.FileName, _options.Extension)));
         var users = lines
             .Where(line => !string.IsNullOrEmpty(line))

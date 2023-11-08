@@ -12,9 +12,9 @@ namespace Assessment.Console.Config
     {       
         public static void AddDomainServices(this IServiceCollection services)
         {
-            services.AddSingleton<IReader, Reader>();
-            services.AddSingleton<IRetriever, Retriever>();
-            services.AddSingleton<IWriter, Writer>();
+            services.AddSingleton<IReaderAsync, Reader>();
+            services.AddSingleton<IRetrieverAsync, Retriever>();
+            services.AddSingleton<IWriterAsync, Writer>();
         }
 
         public static void AddHttpClients(this IServiceCollection services)

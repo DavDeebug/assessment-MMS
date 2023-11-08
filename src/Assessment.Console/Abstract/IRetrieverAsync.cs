@@ -3,8 +3,8 @@ using Assessment.Shared;
 
 namespace Assessment.Console.Abstract
 {
-    public interface IRetriever
+    public interface IRetrieverAsync
     {
-        IEnumerable<User> RetrieveUsers(IEnumerable<Csv> users);
+        Task<IEnumerable<User>> RetrieveUsersAsync(IEnumerable<Csv> users);
     }
 }

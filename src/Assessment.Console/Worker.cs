@@ -6,26 +6,26 @@ namespace Assessment.Console
 {
     public class Worker
     {        
-        readonly IReader _reader;
-        readonly IRetriever _retriever;
-        readonly IWriter _writer;        
+        readonly IReaderAsync _reader;
+        readonly IRetrieverAsync _retriever;
+        readonly IWriterAsync _writer;        
 
-        public Worker(IReader reader, IRetriever retriever, IWriter writer)
+        public Worker(IReaderAsync reader, IRetrieverAsync retriever, IWriterAsync writer)
         {
             _reader = reader;
             _retriever = retriever;
             _writer = writer;
         }
 
-        public void Work(string filePath)
+        public async Task Work(string filePath)
         {
             try
             {                
-                var users = _reader.GetUsers(filePath);
+                var users = await _reader.ReadUsersAsync(filePath);
                 
-                var completeUsers = _retriever.RetrieveUsers(users) ?? Enumerable.Empty<User>();
+                var completeUsers = await _retriever.RetrieveUsersAsync(users) ?? Enumerable.Empty<User>();
                 
-                _writer.Write(completeUsers, filePath);
+                await _writer.WriteUsersAsync(completeUsers, filePath);
 
                 WriteLine("Done!");
             }
