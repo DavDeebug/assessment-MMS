@@ -1,8 +1,9 @@
-﻿namespace Assessment.Console.Abstract
+﻿using Assessment.Shared;
+
+namespace Assessment.Console.Abstract
 {
     public interface IWriter
     {
-        void Write();
+        void Write(IEnumerable<User> completeUsers, string filePath);
     }
-
 }

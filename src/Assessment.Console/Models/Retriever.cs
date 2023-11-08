@@ -3,26 +3,19 @@ using Assessment.Console.Clients;
 using Assessment.Shared;
 using System.Text.Json;
 using System.Web;
-using static System.Console;
 
 namespace Assessment.Console.Models;
 
 public class Retriever : IRetriever
-{    
-    readonly IEnumerable<Csv> _users;
+{        
     readonly AssessmentClient _client;
 
-    public Retriever(IEnumerable<Csv>? users, AssessmentClient client) 
-    {
-        _users = users ?? Enumerable.Empty<Csv>();
-        _client = client;
-    }
-    
+    public Retriever(AssessmentClient client) => _client = client;
 
-    public IEnumerable<User> RetrieveUsers()
+    public IEnumerable<User> RetrieveUsers(IEnumerable<Csv> users)
     {
         var completeUsers = new List<User>();
-        foreach (var user in _users)
+        foreach (var user in users)
         {
             var builder = HttpUtility.ParseQueryString(string.Empty);
 

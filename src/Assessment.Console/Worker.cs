@@ -1,36 +1,31 @@
-﻿using Assessment.Console.Clients;
-using Assessment.Console.Models;
+﻿using Assessment.Console.Abstract;
 using Assessment.Shared;
 using static System.Console;
 
 namespace Assessment.Console
 {
     public class Worker
-    {
-        string? path;
-        readonly AssessmentClient _client;
+    {        
+        readonly IReader _reader;
+        readonly IRetriever _retriever;
+        readonly IWriter _writer;        
 
-        public Worker(AssessmentClient client) => _client = client;
-
-        public void Work()
+        public Worker(IReader reader, IRetriever retriever, IWriter writer)
         {
-            do
-            {
-                WriteLine("Please enter a valid path, for txt template");
-                path = ReadLine();
+            _reader = reader;
+            _retriever = retriever;
+            _writer = writer;
+        }
 
-            } while (string.IsNullOrEmpty(path) || path.Length < 3);
-
+        public void Work(string filePath)
+        {
             try
-            {
-                var reader = new Reader(path);
-                var users = reader.GetUsers();
-
-                var retriever = new Retriever(users, _client);
-                var completeUsers = retriever.RetrieveUsers() ?? Enumerable.Empty<User>();
-
-                var writer = new Writer(completeUsers, path);
-                writer.Write();
+            {                
+                var users = _reader.GetUsers(filePath);
+                
+                var completeUsers = _retriever.RetrieveUsers(users) ?? Enumerable.Empty<User>();
+                
+                _writer.Write(completeUsers, filePath);
 
                 WriteLine("Done!");
             }

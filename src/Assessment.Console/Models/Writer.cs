@@ -1,30 +1,27 @@
 ﻿using Assessment.Console.Abstract;
+using Assessment.Console.Options;
 using Assessment.Shared;
+using Microsoft.Extensions.Options;
 using static System.Console;
 
 namespace Assessment.Console.Models;
 
 public class Writer : IWriter
-{    
-    const string extension = ".txt";
-    private readonly string _path;
-    private readonly IEnumerable<User> _completeUsers;
+{
+    readonly WriterOptions _options;    
 
-    public Writer(IEnumerable<User>? users, string path)
-    {
-        _path = path;
-        _completeUsers = users ?? Enumerable.Empty<User>();
-    }
+    public Writer(IOptions<WriterOptions> options) => _options = options.Value;
 
-    public void Write()
+    public void Write(IEnumerable<User> completeUsers, string filePath)
     {
-        if (!_completeUsers.Any())
+        if (!completeUsers.Any())
         {
             WriteLine("No users found!");
             return;
         }
 
-        File.WriteAllLines(Path.Combine(_path, $"output_{DateTime.Now:yyyy-MM-dd hh-mm-ss}{extension}"),
-            _completeUsers.Select(user => $"Ciao {user.GivenName} {user.FamilyName} this is your email: {user.Email}"));
+            File.WriteAllLines(Path.Combine(filePath,
+                string.Format(_options.FileName, DateTime.Now.ToString(_options.DateFormat), _options.Extension)),
+                completeUsers.Select(user => $"Ciao {user.GivenName} {user.FamilyName} this is your email: {user.Email}"));
     }
 }

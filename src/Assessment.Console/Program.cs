@@ -1,5 +1,6 @@
 ﻿using Assessment.Console;
 using Assessment.Console.Config;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using static System.Console;
@@ -7,19 +8,27 @@ using static System.Console;
 using var host = Host.CreateDefaultBuilder()
     .ConfigureServices(services =>
     {
+        services.AddConfiguration();
         services.AddHttpClients();
+
         services.AddDomainServices();
         services.AddTransient<Worker>();
     })
     .Build();
 
+string? path;
 var app = host.Services.GetRequiredService<Worker>();
-
 
 while (true)
     try
-    {
-        app.Work();
+    {        
+        do
+        {
+            WriteLine("Please enter a valid path, for txt template");
+            path = ReadLine();
+        } while (string.IsNullOrEmpty(path) || path.Length < 3);
+        
+        app.Work(path);
     }
     catch (Exception e)
     {

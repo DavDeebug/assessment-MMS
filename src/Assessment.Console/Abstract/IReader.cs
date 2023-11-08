@@ -4,6 +4,6 @@ namespace Assessment.Console.Abstract
 {
     public interface IReader
     {
-        IEnumerable<Csv> GetUsers();
+        IEnumerable<Csv> GetUsers(string filePath);
     }
 }
