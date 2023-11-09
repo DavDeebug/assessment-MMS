@@ -12,16 +12,36 @@ public class Writer : IWriterAsync
 
     public Writer(IOptions<WriterOptions> options) => _options = options.Value;
 
-    public async Task WriteUsersAsync(IEnumerable<User> completeUsers, string filePath)
+    public async Task WriteUsersAsync(IAsyncEnumerable<User> completeUsers, string filePath)
     {
-        if (!completeUsers.Any())
+        if (!await completeUsers.AnyAsync())
         {
             WriteLine("No users found!");
             return;
         }
 
-            await File.WriteAllLinesAsync(Path.Combine(filePath,
-                string.Format(_options.FileName, DateTime.Now.ToString(_options.DateFormat), _options.Extension)),
-                completeUsers.Select(user => $"Ciao {user.GivenName} {user.FamilyName} this is your email: {user.Email}"));
+        string fileName = string.Format(_options.FileName, DateTime.Now.ToString(_options.DateFormat), _options.Extension);
+        await File.WriteAllLinesAsync(Path.Combine(filePath, fileName),
+            GetUserInfoAsync(completeUsers).ToBlockingEnumerable());
+    }
+
+    private async IAsyncEnumerable<string> GetUserInfoAsync(IAsyncEnumerable<User> users)
+    {
+        await foreach (var user in users)
+        {
+            yield return $"Ciao {user.GivenName} {user.FamilyName} this is your email: {user.Email}";
+        }
+    }
+}
+
+public static class Extensions
+{
+    public static async Task<bool> AnyAsync<T>(this IAsyncEnumerable<T> collection)
+    {
+        await foreach (T _ in collection)
+        {
+            return true;
+        }
+        return false;
     }
 }

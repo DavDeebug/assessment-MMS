@@ -4,6 +4,6 @@ namespace Assessment.Console.Abstract
 {
     public interface IWriterAsync
     {
-        Task WriteUsersAsync(IEnumerable<User> completeUsers, string filePath);
+        Task WriteUsersAsync(IAsyncEnumerable<User> completeUsers, string filePath);
     }
 }

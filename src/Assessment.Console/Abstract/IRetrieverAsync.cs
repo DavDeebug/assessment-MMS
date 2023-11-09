@@ -5,6 +5,6 @@ namespace Assessment.Console.Abstract
 {
     public interface IRetrieverAsync
     {
-        Task<IEnumerable<User>> RetrieveUsersAsync(IEnumerable<Csv> users);
+        IAsyncEnumerable<User> RetrieveUsersAsync(IAsyncEnumerable<Csv> users);
     }
 }

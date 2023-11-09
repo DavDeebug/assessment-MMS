@@ -4,6 +4,6 @@ namespace Assessment.Console.Abstract
 {
     public interface IReaderAsync
     {
-        Task<IEnumerable<Csv>> ReadUsersAsync(string filePath);
+        IAsyncEnumerable<Csv> ReadUsersAsync(string filePath);        
     }
 }

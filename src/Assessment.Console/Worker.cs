@@ -1,5 +1,4 @@
 ﻿using Assessment.Console.Abstract;
-using Assessment.Shared;
 using static System.Console;
 
 namespace Assessment.Console
@@ -21,10 +20,8 @@ namespace Assessment.Console
         {
             try
             {                
-                var users = await _reader.ReadUsersAsync(filePath);
-                
-                var completeUsers = await _retriever.RetrieveUsersAsync(users) ?? Enumerable.Empty<User>();
-                
+                var users = _reader.ReadUsersAsync(filePath);                
+                var completeUsers = _retriever.RetrieveUsersAsync(users);                
                 await _writer.WriteUsersAsync(completeUsers, filePath);
 
                 WriteLine("Done!");
